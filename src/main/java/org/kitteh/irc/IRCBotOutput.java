@@ -54,12 +54,12 @@ final class IRCBotOutput extends Thread {
     public void run() {
         while (!this.isInterrupted()) {
             synchronized (this.wait) {
-                if ((!this.handleLowPriority || this.lowPriorityQueue.isEmpty()) && this.highPriorityQueue.isEmpty()) {
-                    try {
+                try {
+                    while ((!this.handleLowPriority || this.lowPriorityQueue.isEmpty()) && this.highPriorityQueue.isEmpty()) {
                         this.wait.wait();
-                    } catch (InterruptedException e) {
-                        break;
                     }
+                } catch (InterruptedException e) {
+                    break;
                 }
             }
             String message = this.highPriorityQueue.poll();
